@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block title %} Register {% endblock %} {% block content %}
+
+<form
+    class="container w-25 d-flex justify-content-center flex-column gap-2"
+    action=""
+    method="POST"
+>
+    <div class="mb-3">
+        <label for="name" class="form-label">Usuário</label>
+        <input type="text" class="form-control" name="name" id="name" required />
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" id="email" required />
+    </div>
+    <div class="mb-3">
+        <label for="pwd" class="form-label">Senha</label>
+        <input type="password" name="pwd" class="form-control" id="pwd" required />
+    </div>
+    <button type="submit" class="btn w-50 btn-primary align-self-center">
+        Registrar
+    </button>
+</form>
+
+{%endblock %}

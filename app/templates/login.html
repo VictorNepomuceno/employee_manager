@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block title %} Register {% endblock %} {% block content %}
+
+<form
+    class="container w-25 d-flex justify-content-center flex-column gap-2"
+    action=""
+    method="POST"
+>
+    <div class="mb-3">
+        <label for="name" class="form-label">Usuário</label>
+        <input type="text" name="name" class="form-control" id="name" required />
+    </div>
+    <div class="mb-3">
+        <label for="pwd" class="form-label">Senha</label>
+        <input type="password" name="pwd" class="form-control" id="pwd" required />
+    </div>
+    <button type="submit" class="btn btn-primary w-50 align-self-center">Entrar</button>
+    <div class="mt-3">
+        <a href="{{url_for('register')}}"></a>
+    </div>
+</form>
+
+{%endblock %}

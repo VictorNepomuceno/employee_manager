@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+    <head>
+        <meta charset="UTF-8" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"
+        ></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %} Home {% endblock %}</title>
+    </head>
+
+    <style>
+        nav {
+            color: #333;
+            height: 150px;
+            border-bottom: 1px solid #3333335b;
+            padding: 0px 3rem;
+        }
+
+        nav span,
+        nav a {
+            font-size: 1rem;
+        }
+    </style>
+    <body>
+        <header>
+            <nav class="d-flex align-items-center justify-content-between">
+                <span>Data: {{current_time}}</span>
+                <h1>Gerenciamento de funcionários</h1>
+                <a class="btn btn-outline-danger" href="{{url_for('logout')}}"
+                    >Clique para voltar</a
+                >
+            </nav>
+        </header>
+        {% with messages = get_flashed_messages() %} {% if messages %} {% for message in
+        messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span>{{message}}</span>
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+        </div>
+
+        {% endfor %} {% endif %} {% endwith %} {% block content %}
+
+        <main class="container mt-5">
+            <div class="d-flex justify-content-around align-items-center gap-5 mb-5">
+                <h2 class="text-sm-center">Lista de funcionários</h2>
+                <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#mymodal"
+                    class="btn btn-success"
+                >
+                    Adicionar novo funcionário
+                </button>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nome completo</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Telefone</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                </thead>
+                {% for usr in employees %}
+
+                <tbody>
+                    <tr>
+                        <th scope="row">{{usr.id}}</th>
+                        <td>{{usr.name}}</td>
+                        <td>{{usr.email}}</td>
+                        <td>{{usr.phone}}</td>
+                        <td>
+                            <a
+                                href="/update/{{usr.id}}"
+                                class="btn btn-secondary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#mymodaledit{{usr.id}}"
+                                >Editar</a
+                            >
+                            <a
+                                onclick="confirm('Tem certeza que deseja excluir?')"
+                                class="btn btn-danger"
+                                href="/delete/{{usr.id}}"
+                                >Excluir</a
+                            >
+                        </td>
+                    </tr>
+                </tbody>
+                <div
+                    class="modal fade"
+                    id="mymodaledit{{usr.id}}"
+                    tabindex="-1"
+                    aria-labelledby="mymodaledit"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="mymodaledit">
+                                    Editar funcionário
+                                </h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{url_for('update')}}" method="POST">
+                                    <div class="mb-3">
+                                        <label for="name" class="col-form-label"
+                                            >Nome:</label
+                                        >
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value="{{usr.id}}"
+                                        />
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="name"
+                                            name="name"
+                                            value="{{usr.name}}"
+                                        />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="col-form-label"
+                                            >Email:</label
+                                        >
+                                        <input
+                                            type="email"
+                                            class="form-control"
+                                            id="email"
+                                            name="email"
+                                            value="{{usr.email}}"
+                                        />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phone" class="col-form-label"
+                                            >Telefone:</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="phone"
+                                            name="phone"
+                                            value="{{usr.phone}}"
+                                        />
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary">
+                                            Editar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </table>
+        </main>
+        <div
+            class="modal fade"
+            id="mymodal"
+            tabindex="-1"
+            aria-labelledby="mymodal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="mymodal">
+                            Adicionar novo funcionário
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{url_for('create')}}" method="POST">
+                            <div class="mb-3">
+                                <label for="name" class="col-form-label">Nome:</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    name="name"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="col-form-label">Email:</label>
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="email"
+                                    name="email"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="col-form-label"
+                                    >Telefone:</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="phone"
+                                    name="phone"
+                                />
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </body>
+</html>
